@@ -1,4 +1,4 @@
-package frame06;
+package frame07;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -8,11 +8,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-
 public class MyFrame extends JFrame implements ActionListener{
-
-	// 필드
-	JButton sendBtn , deleteBtn , updateBtn;
 	
 	// 생성자
 	public MyFrame(String title) {
@@ -26,18 +22,23 @@ public class MyFrame extends JFrame implements ActionListener{
 		setLayout(new FlowLayout());
 		
 		// 전송 버튼의 참조값을 필드에 저장 ( this. 생략 가능 )
-		this.sendBtn = new JButton("전송");
+		JButton sendBtn = new JButton("전송");
 		add(sendBtn);
 		
-		this.deleteBtn = new JButton("삭제");
+		JButton deleteBtn = new JButton("삭제");
 		add(deleteBtn);
 		
-		this.updateBtn = new JButton("수정");
+		JButton updateBtn = new JButton("수정");
 		add(updateBtn);
 		// 전송 , 삭제 , 수정 버튼 전부 하나의 리스너로 등록
 		sendBtn.addActionListener(this);
 		deleteBtn.addActionListener(this);
 		updateBtn.addActionListener(this);
+		
+		// 각각의 버튼에 action 명령 실행
+		sendBtn.setActionCommand("send");
+		deleteBtn.setActionCommand("delete");
+		updateBtn.setActionCommand("update");
 		
 		// 프레임을 화면상에 실제 보이기 ( false 시 화면에 안 보인다.)
 		this.setVisible(true);
@@ -51,24 +52,21 @@ public class MyFrame extends JFrame implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		System.out.println("어떤 버튼을 눌렀을까요?");
-		// 메소드의 매개변수로 전달되는 ActionListener 객체에 이벤트에 대한 정보가 있다.
-		// 이 객체를 활용하면 어떤 버튼이 눌러졌는지 판별 가능
-		// e.getSource() // 눌러진 버튼의 참조값이 Object 타입으로 리턴
-		
-		// 눌러진 버튼의 참조값 부르기
-		Object which = e.getSource();
-		if(which == sendBtn) {
-			// 전송 버튼을 누름
-			JOptionPane.showMessageDialog(this, "전송했습니다.");
-		}
-		else if(which == deleteBtn) {
-			// 전송 버튼을 누름
-			JOptionPane.showMessageDialog(this, "삭제했습니다.");
-		}
-		else if(which == updateBtn) {
-			// 전송 버튼을 누름
-			JOptionPane.showMessageDialog(this, "수정했습니다.");
+		// 눌러진 버튼의 action command 읽기
+		String cmd = e.getActionCommand();
+		/*
+		 * Java 에서 문자열의 참조값이 같은지 비교 시 비교 연산자 == 을 이용해 비교해도 되지만
+		 * 문자열의 참조값이 아닌 내용이 같은지 비교 시  String 의 .equals() 메소드를 이용한다.
+		 * 
+		 * Java 에서 문자열을 만드는 방법에 따라서 내용은 같지만 참조값이 다른 경우도
+		 * 있다. 따라서 문자열의 내용이 같은지 비교 시 반드시 .equals() 메소드를 이용한다.
+		 */
+		if(cmd.equals("send")) {
+			JOptionPane.showMessageDialog(this, "전송합니다.");
+		}else if(cmd.equals("delete")) {
+			JOptionPane.showMessageDialog(this, "삭제합니다.");
+		}else if(cmd.equals("update")) {
+			JOptionPane.showMessageDialog(this, "수정합니다.");
 		}
 	}
 }
