@@ -2,6 +2,8 @@ package test.main;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 /*
  * JDBC ( Java Data Base Connectivity )
@@ -30,6 +32,28 @@ public class MainClass01 {
 	         System.out.println("Oracle DB 접속 성공");
 	      } catch (Exception e) {
 	         e.printStackTrace();
+	      }
+	      //select 작업을 위해서는 필요한 객체의 참조값을 담을 지역 변수 미리 만들기
+	      PreparedStatement pstmt = null;
+	      ResultSet rs = null;
+	      try {
+	    	  // 실행할 sql 문
+	    	  String sql= "select num , name , addr"
+	    			  + " from member"
+	    			  + " order by num desc";
+	    	  // prepareStatement 객체의 참조값 얻기
+	    	  pstmt = conn.prepareStatement(sql);
+	    	  // select 문 실행하고 결과값을 resultSet 에 대입
+	    	  rs = pstmt.executeQuery();
+	    	  while(rs.next()) {
+	    		  int num = rs.getInt("num");
+	    		  String name = rs.getString("name");
+	    		  String addr = rs.getString("addr");
+	    		  // 콘솔창에 출력
+	    		  System.out.println(num + " | " + name + " | " + addr);
+	    	  }
+	      }catch(Exception e) {
+	    	  e.printStackTrace();  
 	      }
 	}
 }
