@@ -80,7 +80,7 @@ public class MemberDao {
 		else return false;
 	}
 	
-	public boolean delete(MemberDto dto) {
+	public boolean delete(int num) {
 		// 필요한 객체를 담을 지역변수 만들기
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -95,7 +95,7 @@ public class MemberDao {
 			// sql 문을 대신 실행할 PreparedStatement 객체의 참조값 얻기
 			pstmt = conn.prepareStatement(sql);
 			// sql 문이 ? 가 존재하는 미완성이면 여기서 완성한다.
-			pstmt.setInt(1, dto.getNum());
+			pstmt.setInt(1, num);
 			// insert or update or delete 문을 실제 수행 , 변화된 row 의 갯수가 리턴
 			rowCount = pstmt.executeUpdate();
 		}catch (Exception e) {
