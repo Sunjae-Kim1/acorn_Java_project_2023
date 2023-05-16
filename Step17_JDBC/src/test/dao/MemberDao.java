@@ -58,7 +58,7 @@ public class MemberDao {
 			// 실행할 sql
 			String sql = "update member"
 					+ " set name = ? , addr = ?"
-					+ " where num = ?)";
+					+ " where num = ?";
 			// sql 문을 대신 실행할 PreparedStatement 객체의 참조값 얻기
 			pstmt = conn.prepareStatement(sql);
 			// sql 문이 ? 가 존재하는 미완성이면 여기서 완성한다.
@@ -91,7 +91,7 @@ public class MemberDao {
 			conn = new DBConnect().getConn();
 			// 실행할 sql
 			String sql = "delete member"
-					+ " where num = ?)";
+					+ " where num = ?";
 			// sql 문을 대신 실행할 PreparedStatement 객체의 참조값 얻기
 			pstmt = conn.prepareStatement(sql);
 			// sql 문이 ? 가 존재하는 미완성이면 여기서 완성한다.
