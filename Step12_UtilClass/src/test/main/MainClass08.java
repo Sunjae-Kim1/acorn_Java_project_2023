@@ -27,7 +27,5 @@ public class MainClass08 {
 		set2.add("park");
 		set2.add("lee");
 		set2.add("park");
-		
-		
 	}
 }
