@@ -22,6 +22,7 @@ public class TestFrame extends JFrame implements ActionListener{
 	// 필드 정의
 	JTextField inputName , inputAddr;
 	DefaultTableModel model;
+	JTable table;
 	
 	// 생성자
 	public TestFrame(String title) {
@@ -40,6 +41,10 @@ public class TestFrame extends JFrame implements ActionListener{
 		addBtn.setActionCommand("add");
 		addBtn.addActionListener(this);
 		
+		JButton deleteBtn = new JButton("삭제");
+		deleteBtn.setActionCommand("delete");
+		deleteBtn.addActionListener(this);
+		
 		// 패널에 UI 배치
 		JPanel panel = new JPanel();
 		panel.add(label1);
@@ -47,6 +52,7 @@ public class TestFrame extends JFrame implements ActionListener{
 		panel.add(label2);
 		panel.add(inputAddr);
 		panel.add(addBtn);
+		panel.add(deleteBtn);
 		
 		
 		// 패널 전부를 프레임의 북쪽에 배치
@@ -54,7 +60,7 @@ public class TestFrame extends JFrame implements ActionListener{
 		
 		panel.setBackground(Color.yellow);
 		
-		JTable table = new JTable();
+		table = new JTable();
 		
 		String[] colNames = {"번호" , "이름" , "주소"};
 		// 테이블에 연결할 모델 객체 생성
@@ -75,12 +81,7 @@ public class TestFrame extends JFrame implements ActionListener{
 //		model.addRow(row2);
 //		model.addRow(row3);
 		
-		// 회원목록 얻기
-		List<MemberDto> list = new MemberDao().getList();
-		for(MemberDto tmp:list) {
-			Object[] row = {tmp.getNum() , tmp.getName() , tmp.getAddr()};
-			model.addRow(row);
-		}
+		displayMember();
 		
 		// 부모 객체의 메소드를 마음대로 호출 가능 , this 생략 가능
 //		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -113,15 +114,41 @@ public class TestFrame extends JFrame implements ActionListener{
 			if(isSuccess) {
 				JOptionPane.showMessageDialog(this, "저장했습니다.");
 				
-				model.setRowCount(0);
-
-				// 회원목록 얻기
-				List<MemberDto> list = new MemberDao().getList();
-				for(MemberDto tmp:list) {
-					Object[] row = {tmp.getNum() , tmp.getName() , tmp.getAddr()};
-					model.addRow(row);
-				}
+				displayMember();
 			}
+		} // if cmd
+		else if(cmd.equals("delete")) {
+			// JTable 으로부터 선택한 row 의 인덱스 얻기
+			int selectedRow = table.getSelectedRow();
+			if(selectedRow == -1) { // 선택한 행이 없는 경우
+				JOptionPane.showMessageDialog(this, "삭제할 행을 선택해주세요.");
+				return;
+			}
+			
+			int choose = JOptionPane.showConfirmDialog(this, "삭제하시겠습니까?");
+			
+			if(choose==JOptionPane.YES_OPTION) {
+				// 선택한 행의 회원 번호 얻기
+				int result = (int)model.getValueAt(selectedRow, 0);
+				new MemberDao().delete(result);
+				JOptionPane.showMessageDialog(this, "삭제했습니다.");
+			}else if(choose==JOptionPane.NO_OPTION){
+				JOptionPane.showMessageDialog(this, "삭제를 취소했습니다.");
+			}
+			displayMember();
 		}
 	}
+		
+		// TestFrame 메소드 추가
+		public void displayMember() {
+			// 기존에 출력된 내용을 모두 삭제후 다시 출력
+			model.setRowCount(0);
+
+			// 회원목록 얻기
+			List<MemberDto> list = new MemberDao().getList();
+			for(MemberDto tmp:list) {
+				Object[] row = {tmp.getNum() , tmp.getName() , tmp.getAddr()};
+				model.addRow(row);
+			}
+		}
 }
